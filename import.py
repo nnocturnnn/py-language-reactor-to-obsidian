@@ -1,12 +1,53 @@
-from selenium import webdriver
-import time
+import requests
 
-driver = webdriver.Chrome()
-driver.get("https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?response_type=code&client_id=177081285221-3irjc6filinptogbt1130jjte8n2n49n.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fnlle-b0128.firebaseapp.com%2F__%2Fauth%2Fhandler&state=AMbdmDm_77ceopADgcl9XYMBVbBcq7uRn6_qHiiLNRzO_w6ElLGO8F7BwS-YzaXyjmCBcP6e8acXKgP9AYHnEGq8CMGvq7vcow8vTjDtWZEQg-AvGXBff20i4Y_FK785a4QlWocsXRquz_BmXuDa_gM5xjKyAEBTB0weXiIKa8WyV5_M6RCrOiZT2j97L7FVcDvQES9fwfa7wYJZDO_VAVRPb8nEvY1fidRzpxmuHsqxpH7at9omEt8xhLvIYcdTvKuE8F7GeBuwkSiEvVDUY9fFQKx4TJaO3ML97hWNzzaRJSFYyT0e1CwBbi3b1e7bXsGnAWs&scope=openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20profile&context_uri=https%3A%2F%2Fwww.languagereactor.com&service=lso&o2v=1&theme=glif&flowName=GeneralOAuthFlow")
-driver.find_element("xpath",'//input[@type="email"]').send_keys("tusabas12@gmail.com")
-driver.find_element("xpath",'//*[@id="identifierNext"]').click()
-time.sleep(3)
-driver.find_element("xpath",'//input[@type="password"]').send_keys("")
-driver.find_element("xpath",'//*[@id="passwordNext"]').click()
-time.sleep(2)
-driver.get('https://youtube.com')
+url = 'https://lb.dioco.io/base_items_itemsCSVExport_7'
+
+headers = {
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uk;q=0.6',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/json',
+    'Origin': 'https://www.languagereactor.com',
+    'Referer': 'https://www.languagereactor.com/',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'cross-site',
+    'User-Agent': 'Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320'
+}
+
+data = {
+    "itemType": None,
+    "langCode_G": "en",
+    "learningStages": ["LEARNING"],
+    "tags": None,
+    "source": None,
+    "preferredTranslationType": "machine",
+    "loadMoreLastExtendedKey": None,
+    "loadMorePartNum": 1,
+    "exportMedia": True,
+    "itemsSinceLastExportOnly": False,
+    "userEmail": "mediandrey@gmail.com",
+    "diocoToken": "UwR6l31fOW37nN8OdjjQeer7vMZktx7S6I2SwhZ7wODwY3ASDjSo6r0hI88P8TwGfHljykePmO4TJmGCmCMhNw=="
+}
+
+def get_data_url():
+    response = requests.post(url, json=data, headers=headers)
+
+    if response.status_code == 200:
+        print(response.text)
+    else:
+        print(f"Request failed with status code {response.status_code}")
+    return response.json()['data']['file_path']
+
+
+def download_csv_lr(file_url):
+    local_filename = "downloaded_file.zip"
+    response = requests.get(file_url, stream=True)
+    if response.status_code == 200:
+        with open(local_filename, 'wb') as file:
+            for chunk in response.iter_content(chunk_size=1024):
+                if chunk:
+                    file.write(chunk)
+        print(f"File '{local_filename}' has been downloaded.")
+    else:
+        print(f"Failed to download the file. Status code: {response.status_code}")
