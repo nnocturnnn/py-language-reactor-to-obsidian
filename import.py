@@ -51,3 +51,6 @@ def download_csv_lr(file_url):
         print(f"File '{local_filename}' has been downloaded.")
     else:
         print(f"Failed to download the file. Status code: {response.status_code}")
+
+if __name__ == "__main__":
+    
