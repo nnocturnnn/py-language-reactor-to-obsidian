@@ -1,8 +1,9 @@
-import requests
-import pandas as pd
 import os
-import zipfile
 import shutil
+import zipfile
+
+import pandas as pd
+import requests
 
 url = "https://lb.dioco.io/base_items_itemsCSVExport_7"
 
