@@ -1,4 +1,8 @@
 import requests
+import pandas as pd
+import os
+import zipfile
+import shutil
 
 url = 'https://lb.dioco.io/base_items_itemsCSVExport_7'
 
@@ -24,24 +28,24 @@ data = {
     "preferredTranslationType": "machine",
     "loadMoreLastExtendedKey": None,
     "loadMorePartNum": 1,
-    "exportMedia": True,
+    "exportMedia": False,
     "itemsSinceLastExportOnly": False,
     "userEmail": "mediandrey@gmail.com",
     "diocoToken": "UwR6l31fOW37nN8OdjjQeer7vMZktx7S6I2SwhZ7wODwY3ASDjSo6r0hI88P8TwGfHljykePmO4TJmGCmCMhNw=="
 }
 
-def get_data_url():
-    response = requests.post(url, json=data, headers=headers)
+# def get_data_url() -> str:
+#     response = requests.post(url, json=data, headers=headers)
 
-    if response.status_code == 200:
-        print(response.text)
-    else:
-        print(f"Request failed with status code {response.status_code}")
-    return response.json()['data']['file_path']
+#     if response.status_code == 200:
+#         print(response.text)
+#     else:
+#         print(f"Request failed with status code {response.status_code}")
+#     return response.json()['data']['file_path']
 
 
-def download_csv_lr(file_url):
-    local_filename = "downloaded_file.zip"
+def download_csv_lr(file_url: str) -> None:
+    local_filename = "lr.zip"
     response = requests.get(file_url, stream=True)
     if response.status_code == 200:
         with open(local_filename, 'wb') as file:
@@ -51,6 +55,46 @@ def download_csv_lr(file_url):
         print(f"File '{local_filename}' has been downloaded.")
     else:
         print(f"Failed to download the file. Status code: {response.status_code}")
+    return local_filename
+    
+
+def unzip(filename: str) -> None:
+    with zipfile.ZipFile(filename, 'r') as zip_ref:
+        zip_ref.extractall("unziplr")
+    try:
+        os.remove(filename)
+        print(f"File '{filename}' has been removed.")
+    except OSError as e:
+        print(f"Error: {e}")
+    try:
+        os.rename("unziplr/items.csv", "items.csv")
+        print("Done")
+    except OSError as e:
+        print(f"Error: {e}")
+    try:
+        shutil.rmtree("unziplr")
+        print(f"Directory unziplr and its contents have been removed.")
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+def prepare_to_import(input_file: str, output_file: str) -> None:
+    try:
+        df = pd.read_csv(input_file,delimiter='\t')
+        df['Combined_Column'] = df.apply(lambda row: f"{row.iloc[4]} [{row.iloc[5]}] ({row.iloc[6]})", axis=1)
+        df = df[['Combined_Column', df.columns[8]]]
+        df.to_csv(output_file, index=False)
+    except Exception as e:
+        print(f"n error occurred: {str(e)}")
+    try:
+        os.remove(input_file)
+        print(f"File '{input_file}' has been removed.")
+    except OSError as e:
+        print(f"Error: {e}")
+
+
 
 if __name__ == "__main__":
+    unzip(download_csv_lr('https://storage.googleapis.com/nlle-b0128.appspot.com/userExportCache/lln_csv_items_2023-10-28_7716694.zip'))
+    prepare_to_import("items.csv","out.csv")
     
