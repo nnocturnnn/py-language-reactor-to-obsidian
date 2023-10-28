@@ -48,7 +48,7 @@ data = {
 def download_csv_lr(file_url: str) -> None:
     """
 
-    :param file_url: str: 
+    :param file_url: str:
 
     """
     local_filename = "lr.zip"
@@ -67,7 +67,7 @@ def download_csv_lr(file_url: str) -> None:
 def unzip(filename: str) -> None:
     """
 
-    :param filename: str: 
+    :param filename: str:
 
     """
     with zipfile.ZipFile(filename, "r") as zip_ref:
@@ -92,8 +92,8 @@ def unzip(filename: str) -> None:
 def prepare_to_import(input_file: str, output_file: str) -> None:
     """
 
-    :param input_file: str: 
-    :param output_file: str: 
+    :param input_file: str:
+    :param output_file: str:
 
     """
     try:
