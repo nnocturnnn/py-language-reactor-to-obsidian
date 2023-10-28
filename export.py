@@ -95,6 +95,6 @@ def prepare_to_import(input_file: str, output_file: str) -> None:
 
 
 if __name__ == "__main__":
-    unzip(download_csv_lr('https://storage.googleapis.com/nlle-b0128.appspot.com/userExportCache/lln_csv_items_2023-10-28_7716694.zip'))
+    unzip(download_csv_lr(''))
     prepare_to_import("items.csv","out.csv")
     
