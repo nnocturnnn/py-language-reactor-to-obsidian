@@ -46,6 +46,11 @@ data = {
 
 
 def download_csv_lr(file_url: str) -> None:
+    """
+
+    :param file_url: str: 
+
+    """
     local_filename = "lr.zip"
     response = requests.get(file_url, stream=True)
     if response.status_code == 200:
@@ -60,6 +65,11 @@ def download_csv_lr(file_url: str) -> None:
 
 
 def unzip(filename: str) -> None:
+    """
+
+    :param filename: str: 
+
+    """
     with zipfile.ZipFile(filename, "r") as zip_ref:
         zip_ref.extractall("unziplr")
     try:
@@ -80,6 +90,12 @@ def unzip(filename: str) -> None:
 
 
 def prepare_to_import(input_file: str, output_file: str) -> None:
+    """
+
+    :param input_file: str: 
+    :param output_file: str: 
+
+    """
     try:
         df = pd.read_csv(input_file, delimiter="\t")
         df["Combined_Column"] = df.apply(
