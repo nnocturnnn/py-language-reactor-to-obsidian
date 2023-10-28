@@ -54,9 +54,10 @@ def download_csv_lr(file_url: str) -> None:
                     file.write(chunk)
         print(f"File '{local_filename}' has been downloaded.")
     else:
-        print(f"Failed to download the file. Status code: {response.status_code}")
+        print(
+            f"Failed to download the file. Status code: {response.status_code}")
     return local_filename
-    
+
 
 def unzip(filename: str) -> None:
     with zipfile.ZipFile(filename, 'r') as zip_ref:
@@ -80,8 +81,9 @@ def unzip(filename: str) -> None:
 
 def prepare_to_import(input_file: str, output_file: str) -> None:
     try:
-        df = pd.read_csv(input_file,delimiter='\t')
-        df['Combined_Column'] = df.apply(lambda row: f"{row.iloc[4]} [{row.iloc[5]}] ({row.iloc[6]})", axis=1)
+        df = pd.read_csv(input_file, delimiter='\t')
+        df['Combined_Column'] = df.apply(
+            lambda row: f"{row.iloc[4]} [{row.iloc[5]}] ({row.iloc[6]})", axis=1)
         df = df[['Combined_Column', df.columns[8]]]
         df.to_csv(output_file, index=False)
     except Exception as e:
@@ -93,8 +95,6 @@ def prepare_to_import(input_file: str, output_file: str) -> None:
         print(f"Error: {e}")
 
 
-
 if __name__ == "__main__":
     unzip(download_csv_lr(''))
-    prepare_to_import("items.csv","out.csv")
-    
+    prepare_to_import("items.csv", "out.csv")
