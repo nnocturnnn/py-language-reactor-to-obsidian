@@ -8,31 +8,52 @@ import requests
 url = "https://lb.dioco.io/base_items_itemsCSVExport_7"
 
 headers = {
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uk;q=0.6",
-    "Connection": "keep-alive",
-    "Content-Type": "application/json",
-    "Origin": "https://www.languagereactor.com",
-    "Referer": "https://www.languagereactor.com/",
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "cross-site",
-    "User-Agent": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320",
+    "Accept":
+    "application/json, text/plain, */*",
+    "Accept-Language":
+    "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uk;q=0.6",
+    "Connection":
+    "keep-alive",
+    "Content-Type":
+    "application/json",
+    "Origin":
+    "https://www.languagereactor.com",
+    "Referer":
+    "https://www.languagereactor.com/",
+    "Sec-Fetch-Dest":
+    "empty",
+    "Sec-Fetch-Mode":
+    "cors",
+    "Sec-Fetch-Site":
+    "cross-site",
+    "User-Agent":
+    "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.188 Safari/537.36 CrKey/1.54.250320",
 }
 
 data = {
-    "itemType": None,
-    "langCode_G": "en",
+    "itemType":
+    None,
+    "langCode_G":
+    "en",
     "learningStages": ["LEARNING"],
-    "tags": None,
-    "source": None,
-    "preferredTranslationType": "machine",
-    "loadMoreLastExtendedKey": None,
-    "loadMorePartNum": 1,
-    "exportMedia": False,
-    "itemsSinceLastExportOnly": False,
-    "userEmail": "mediandrey@gmail.com",
-    "diocoToken": "UwR6l31fOW37nN8OdjjQeer7vMZktx7S6I2SwhZ7wODwY3ASDjSo6r0hI88P8TwGfHljykePmO4TJmGCmCMhNw==",
+    "tags":
+    None,
+    "source":
+    None,
+    "preferredTranslationType":
+    "machine",
+    "loadMoreLastExtendedKey":
+    None,
+    "loadMorePartNum":
+    1,
+    "exportMedia":
+    False,
+    "itemsSinceLastExportOnly":
+    False,
+    "userEmail":
+    "mediandrey@gmail.com",
+    "diocoToken":
+    "UwR6l31fOW37nN8OdjjQeer7vMZktx7S6I2SwhZ7wODwY3ASDjSo6r0hI88P8TwGfHljykePmO4TJmGCmCMhNw==",
 }
 
 # def get_data_url() -> str:
@@ -60,7 +81,9 @@ def download_csv_lr(file_url: str) -> None:
                     file.write(chunk)
         print(f"File '{local_filename}' has been downloaded.")
     else:
-        print(f"Failed to download the file. Status code: {response.status_code}")
+        print(
+            f"Failed to download the file. Status code: {response.status_code}"
+        )
     return local_filename
 
 
@@ -99,8 +122,8 @@ def prepare_to_import(input_file: str, output_file: str) -> None:
     try:
         df = pd.read_csv(input_file, delimiter="\t")
         df["Combined_Column"] = df.apply(
-            lambda row: f"{row.iloc[4]} [{row.iloc[5]}] ({row.iloc[6]})", axis=1
-        )
+            lambda row: f"{row.iloc[4]} [{row.iloc[5]}] ({row.iloc[6]})",
+            axis=1)
         df = df[["Combined_Column", df.columns[8]]]
         df.to_csv(output_file, index=False)
     except Exception as e:
