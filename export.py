@@ -7,6 +7,7 @@ import requests
 
 TRANSLATION_COLUMN_INDEX = 8
 WORD_COLUMN_INDEX = 4
+CORRECT_ROW_COUNT = 10
 
 
 def send_post_request(url: str, data: dict) -> requests.Response:
@@ -48,7 +49,7 @@ def extract_words_from_csv(file_path: str) -> Generator[Tuple[str, str], None, N
         with open(file_path, mode="r", encoding="utf-8") as file:
             csv_reader = csv.reader(file, delimiter="\t")
             for row in csv_reader:
-                if len(row) > 10:
+                if len(row) > CORRECT_ROW_COUNT:
                     word = row[WORD_COLUMN_INDEX]
                     translation = row[TRANSLATION_COLUMN_INDEX]
                     print(f"Extracted word:{word}, translation:{translation}")
@@ -105,8 +106,8 @@ def main() -> None:
         "loadMorePartNum": 1,
         "exportMedia": False,
         "itemsSinceLastExportOnly": True,
-        "userEmail": os.getenv("API_EMAIL"),
-        "diocoToken": os.getenv("DIOCO_API_KEY"),
+        "userEmail": "mediandrey@gmail.com",  # TODO change to env variable
+        "diocoToken": "UwR6l31fOW37nN8OdjjQeer7vMZktx7S6I2SwhZ7wODwY3ASDjSo6r0hI88P8TwGfHljykePmO4TJmGCmCMhNw==",  # TODO change to env variable
     }
 
     post_response = send_post_request(post_url, data)
