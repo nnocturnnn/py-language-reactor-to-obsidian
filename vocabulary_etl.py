@@ -1,3 +1,4 @@
+import argparse
 import base64
 import csv
 import os
@@ -91,26 +92,45 @@ def delete_file(file_path: str) -> bool:
 
 
 def main() -> None:
-    post_url = "https://api-cdn.dioco.io/base_export_itemsCSVExport_7"
-    csv_save_path = "exported_items.csv"
-    md_file_path = "/Users/andriisydoruk/Library/Mobile Documents/iCloud~md~obsidian/Documents/andi/Dict.md"
+    url = "https://api-cdn.dioco.io/base_export_itemsCSVExport_7"
+    parser = argparse.ArgumentParser(description="Export items with specified options.")
+    
+    parser.add_argument("--csv_save_path", type=str, required=True, help="Path to save the exported CSV file.")
+    parser.add_argument("--obsidian_dict_path", type=str, required=True, help="Path to the Obsidian dictionary file.")
+    parser.add_argument("--item_type", type=str, default=None, help="Type of item.")
+    parser.add_argument("--lang_code", type=str, default="en", help="Language code.")
+    parser.add_argument("--learning_stages", type=str, nargs='+', default=["LEARNING"], help="Learning stages.")
+    parser.add_argument("--tags", type=str, default=None, help="Tags.")
+    parser.add_argument("--source", type=str, default=None, help="Source.")
+    parser.add_argument("--preferred_translation_type", type=str, default="machine", help="Preferred translation type.")
+    parser.add_argument("--load_more_last_extended_key", type=str, default=None, help="Load more last extended key.")
+    parser.add_argument("--load_more_part_num", type=int, default=1, help="Load more part number.")
+    parser.add_argument("--export_media", type=bool, default=False, help="Export media.")
+    parser.add_argument("--items_since_last_export_only", type=bool, default=True, help="Items since last export only.")
+    parser.add_argument("--user_email", type=str, default=os.getenv("EMAIL_API"), help="User email.")
+    parser.add_argument("--dioco_token", type=str, default=os.getenv("DIOCO_API_KEY"), help="Dioco token.")
+
+    args = parser.parse_args()
+
+    csv_save_path = args.csv_save_path
+    obsidian_dict_path = args.obsidian_dict_path
 
     data = {
-        "itemType": None,
-        "langCode_G": "en",
-        "learningStages": ["LEARNING"],
-        "tags": None,
-        "source": None,
-        "preferredTranslationType": "machine",
-        "loadMoreLastExtendedKey": None,
-        "loadMorePartNum": 1,
-        "exportMedia": False,
-        "itemsSinceLastExportOnly": True,
-        "userEmail": os.getenv("EMAIL_API"),
-        "diocoToken": os.getenv("DIOCO_API_KEY"),
+        "itemType": args.item_type,
+        "langCode_G": args.lang_code,
+        "learningStages": args.learning_stages,
+        "tags": args.tags,
+        "source": args.source,
+        "preferredTranslationType": args.preferred_translation_type,
+        "loadMoreLastExtendedKey": args.load_more_last_extended_key,
+        "loadMorePartNum": args.load_more_part_num,
+        "exportMedia": args.export_media,
+        "itemsSinceLastExportOnly": args.items_since_last_export_only,
+        "userEmail": args.user_email,
+        "diocoToken": args.dioco_token,
     }
 
-    post_response = send_post_request(post_url, data)
+    post_response = send_post_request(url, data)
     content = fetch_response_content(post_response)
     csv_file_path = None
 
@@ -119,7 +139,7 @@ def main() -> None:
 
     if csv_file_path:
         words = extract_words_from_csv(csv_file_path)
-        if append_words_to_md(md_file_path, words):
+        if append_words_to_md(obsidian_dict_path, words):
             delete_file(csv_file_path)
 
 
